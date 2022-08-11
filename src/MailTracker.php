@@ -117,7 +117,7 @@ class MailTracker
     protected function injectTrackingPixel($html, $hash)
     {
         // Append the tracking url
-        $tracking_pixel = '<img border=0 width=1 alt="" height=1 src="'.route('mailTracker_t', [$hash]).'" />';
+        $tracking_pixel = '<img border=0 width=1 alt="" height=1 src="'.tenant_route(tenant()->firstDomain(),'mailTracker_t', [$hash]).'" />';
 
         $linebreak = app(Str::class)->random(32);
         $html = str_replace("\n", $linebreak, $html);
