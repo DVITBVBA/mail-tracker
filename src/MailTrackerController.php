@@ -65,8 +65,11 @@ class MailTrackerController extends Controller
         if (!$url) {
             $url = config('mail-tracker.redirect-missing-links-to') ?: '/';
         }
+
+        $url_host = parse_url($url, PHP_URL_HOST);
         $tracker = MailTracker::sentEmailModel()->newQuery()->where('hash', $hash)
             ->first();
+
         if ($tracker) {
             $event = new ValidActionEvent($tracker);
 
@@ -88,6 +91,11 @@ class MailTrackerController extends Controller
                 }
             }
         }
+
+        if ( ! $tracker || empty($tracker->domains_in_context) || ! in_array($url_host, $tracker->domains_in_context) ){
+            return redirect(config('mail-tracker.redirect-missing-links-to') ?: '/');
+        }
+
         return redirect($url);
     }
 }
